@@ -5,3 +5,4 @@ tensorflow==2.16.1
 pandas==2.2.1
 av==11.0.0
 deepface==0.0.86
+streamlit_webrtc==0.47.6
