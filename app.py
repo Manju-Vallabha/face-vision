@@ -11,7 +11,7 @@ from PIL import Image, ImageDraw, ImageFont
 from streamlit_lottie import st_lottie
 from deepface import DeepFace
 
-st.set_page_config(layout='wide')
+st.set_page_config(layout='wide', page_title="Face Vision", page_icon="👦")
 con1 = st.container()
 con2 = st.container()
 
