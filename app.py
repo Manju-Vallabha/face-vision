@@ -42,7 +42,7 @@ def web_emotion_detection(frame):
         for i, emotion in enumerate(emotions):
             label = emotion
             # Keep text on Face
-            font = ImageFont.truetype("arial", 15)
+            font = ImageFont.truetype("monospace", 15)
             draw.text((startX+10, startY-20), label, font=font, fill=(0, 255, 0))
     # Convert back to numpy array
     image_np = np.array(image_pil)
@@ -111,7 +111,7 @@ if mode == 'Capture':
                 for i, emotion in enumerate(emotions):
                     label = emotion
                     # Keep text on Face
-                    font = ImageFont.truetype("arial", 15)
+                    font = ImageFont.truetype("monospace", 15)
                     draw.text((startX+10, startY-20), label, font=font, fill=(0, 255, 0))
             # Convert back to numpy array
             image_np = np.array(image_pil)
