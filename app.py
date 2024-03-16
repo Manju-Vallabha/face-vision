@@ -12,6 +12,7 @@ from streamlit_lottie import st_lottie
 from deepface import DeepFace
 
 import os
+import logging
 DEBUG = os.environ.get("DEBUG", "false").lower() not in ["false", "no", "0"]
 
 logging.basicConfig(
