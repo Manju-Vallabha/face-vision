@@ -22,7 +22,7 @@ def load_lottiefile(filepath: str):
 logo = load_lottiefile("animation.json")
 
 class VideoProcessor:
-    def recv(self, frame):
+    def __call__(self, frame):
         image_np = frame.to_ndarray(format="bgr24")
         image_pil = Image.fromarray(image_np)
         draw = ImageDraw.Draw(image_pil)
@@ -106,8 +106,10 @@ if mode == 'Capture':
 if mode == 'Web-Cam':
     c_1, c_2, c_3 = st.columns([1,3,1])
     with c_2:
-        webrtc_streamer(key="example",video_frame_callback=VideoProcessor,
+        if mode == 'Web-Cam':
+    c_1, c_2, c_3 = st.columns([1,3,1])
+    with c_2:
+        webrtc_streamer(key="example", video_frame_callback=VideoProcessor(),
                 rtc_configuration=RTCConfiguration(
-                    {"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}
-                    )
-    )
+                    {"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]})
+        )
