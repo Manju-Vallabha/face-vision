@@ -6,7 +6,7 @@ import pandas as pd
 import json
 import av
 
-from streamlit_webrtc import webrtc_streamer
+from streamlit_webrtc import webrtc_streamer, RTCConfiguration
 from PIL import Image, ImageDraw, ImageFont
 from streamlit_lottie import st_lottie
 from deepface import DeepFace
