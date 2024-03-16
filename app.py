@@ -21,25 +21,24 @@ def load_lottiefile(filepath: str):
 
 logo = load_lottiefile("animation.json")
 
-class VideoProcessor:
-    def __call__(self, frame):
-        image_np = frame.to_ndarray(format="bgr24")
-        image_pil = Image.fromarray(image_np)
-        draw = ImageDraw.Draw(image_pil)
-        faces, confidences = cv.detect_face(image_np)
-        for idx, f in enumerate(faces):
-            (startX, startY) = f[0], f[1]
-            (endX, endY) = f[2], f[3]
-            face_img = image_np[startY:endY, startX:endX]
-            obj = DeepFace.analyze(face_img, actions=['emotion'], enforce_detection=False)
-            emotions=(d["dominant_emotion"] for d in obj)
-            draw.rectangle(((startX, startY), (endX, endY)), outline=(0, 255, 0), width=2)
-            for i, emotion in enumerate(emotions):
-                label = emotion
-                font = ImageFont.truetype("arial", 15)
-                draw.text((startX+10, startY-20), label, font=font, fill=(0, 255, 0))
-        image_np = np.array(image_pil)
-        return av.VideoFrame.from_ndarray(image_np, format="bgr24")
+def web_emotion_detection(frame):
+    image_np = frame.to_ndarray(format="bgr24")
+    image_pil = Image.fromarray(image_np)
+    draw = ImageDraw.Draw(image_pil)
+    faces, confidences = cv.detect_face(image_np)
+    for idx, f in enumerate(faces):
+        (startX, startY) = f[0], f[1]
+        (endX, endY) = f[2], f[3]
+        face_img = image_np[startY:endY, startX:endX]
+        obj = DeepFace.analyze(face_img, actions=['emotion'], enforce_detection=False)
+        emotions=(d["dominant_emotion"] for d in obj)
+        draw.rectangle(((startX, startY), (endX, endY)), outline=(0, 255, 0), width=2)
+        for i, emotion in enumerate(emotions):
+            label = emotion
+            font = ImageFont.truetype("arial", 15)
+            draw.text((startX+10, startY-20), label, font=font, fill=(0, 255, 0))
+    image_np = np.array(image_pil)
+    return av.VideoFrame.from_ndarray(image_np, format="bgr24")
 
 with st.sidebar:
     st.title('Experience the power of computer vision')
@@ -106,10 +105,8 @@ if mode == 'Capture':
 if mode == 'Web-Cam':
     c_1, c_2, c_3 = st.columns([1,3,1])
     with c_2:
-        if mode == 'Web-Cam':
-    c_1, c_2, c_3 = st.columns([1,3,1])
-    with c_2:
-        webrtc_streamer(key="example", video_frame_callback=VideoProcessor(),
+        webrtc_streamer(key="example", video_frame_callback=web_emotion_detection,
                 rtc_configuration=RTCConfiguration(
-                    {"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]})
-        )
+                    {"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}
+                    )
+    )
