@@ -108,5 +108,4 @@ if mode == 'Web-Cam':
     with c_2:
         webrtc_streamer(key="example", video_frame_callback=web_emotion_detection,
                 rtc_configuration=RTCConfiguration(
-                    {"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}
-                    )
+                    {"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]})
