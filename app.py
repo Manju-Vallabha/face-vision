@@ -21,30 +21,22 @@ def load_lottiefile(filepath: str):
 
 logo = load_lottiefile("animation.json")
 
-
 def web_emotion_detection(frame):
     image_np = frame.to_ndarray(format="bgr24")
-    # Convert numpy array to PIL Image
     image_pil = Image.fromarray(image_np)
     draw = ImageDraw.Draw(image_pil)
-    # Detect Faces
     faces, confidences = cv.detect_face(image_np)
     for idx, f in enumerate(faces):
         (startX, startY) = f[0], f[1]
         (endX, endY) = f[2], f[3]
-        # Crop the face
         face_img = image_np[startY:endY, startX:endX]
-        # Detects Emotions of cropped face
         obj = DeepFace.analyze(face_img, actions=['emotion'], enforce_detection=False)
         emotions=(d["dominant_emotion"] for d in obj)
-        # Draw rectangle over face
         draw.rectangle(((startX, startY), (endX, endY)), outline=(0, 255, 0), width=2)
         for i, emotion in enumerate(emotions):
             label = emotion
-            # Keep text on Face
-            font = ImageFont.truetype("arial.ttf", 15)
+            font = ImageFont.truetype("arial", 15)
             draw.text((startX+10, startY-20), label, font=font, fill=(0, 255, 0))
-    # Convert back to numpy array
     image_np = np.array(image_pil)
     return av.VideoFrame.from_ndarray(image_np, format="bgr24")
 
@@ -85,7 +77,6 @@ with con2:
         if mode == '<Select>':
             st.warning('👈 Explore the power of computer vision by selecting a mode from the sidebar')
 
-        
 if mode == 'Capture':
     c_1, c_2, c_3 = st.columns([1,3,1])
     with c_2:
@@ -93,27 +84,20 @@ if mode == 'Capture':
         if image is not None:
             image = Image.open(image)
             image_np = np.array(image)
-            # Convert numpy array to PIL Image
             image_pil = Image.fromarray(image_np)
             draw = ImageDraw.Draw(image_pil)
-            # Detect Faces
             faces, confidences = cv.detect_face(image_np)
             for f in faces:
                 (startX, startY) = f[0], f[1]
                 (endX, endY) = f[2], f[3]
-                # Draw rectangle over face
                 draw.rectangle(((startX, startY), (endX, endY)), outline=(0, 255, 0), width=2)
-                # Crop the face
                 face_img = image_np[startY:endY, startX:endX]
-                # Detects Emotions of cropped face
                 obj = DeepFace.analyze(face_img, actions=['emotion'], enforce_detection=False)
                 emotions = (d["dominant_emotion"] for d in obj)
                 for i, emotion in enumerate(emotions):
                     label = emotion
-                    # Keep text on Face
-                    font = ImageFont.truetype("arial.ttf", 15)
+                    font = ImageFont.truetype("arial", 15)
                     draw.text((startX+10, startY-20), label, font=font, fill=(0, 255, 0))
-            # Convert back to numpy array
             image_np = np.array(image_pil)
             st.image(image_np, caption='Uploaded Image.', use_column_width=True)
             st.write('Emotion Detected:', label)   
@@ -121,5 +105,4 @@ if mode == 'Capture':
 if mode == 'Web-Cam':
     c_1, c_2, c_3 = st.columns([1,3,1])
     with c_2:
-        
         webrtc_streamer(key="example", video_frame_callback=web_emotion_detection)
