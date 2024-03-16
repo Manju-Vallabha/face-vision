@@ -106,7 +106,7 @@ if mode == 'Capture':
 if mode == 'Web-Cam':
     c_1, c_2, c_3 = st.columns([1,3,1])
     with c_2:
-        webrtc_streamer(key="example",video_frame_callback=VideoProcessor, video_processor_factory=VideoProcessor,
+        webrtc_streamer(key="example",video_frame_callback=VideoProcessor,
                 rtc_configuration=RTCConfiguration(
                     {"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}
                     )
