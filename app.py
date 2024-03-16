@@ -11,6 +11,24 @@ from PIL import Image, ImageDraw, ImageFont
 from streamlit_lottie import st_lottie
 from deepface import DeepFace
 
+import os
+DEBUG = os.environ.get("DEBUG", "false").lower() not in ["false", "no", "0"]
+
+logging.basicConfig(
+        format="[%(asctime)s] %(levelname)7s from %(name)s in %(pathname)s:%(lineno)d: "
+        "%(message)s",
+        level=logging.DEBUG if DEBUG else logging.INFO,
+        force=True,
+    )
+fsevents_logger = logging.getLogger("fsevents")
+fsevents_logger.setLevel(logging.WARNING)
+
+aiortc_logger = logging.getLogger("aiortc")
+aiortc_logger.setLevel(logging.INFO)
+
+aioice_logger = logging.getLogger("aioice")
+aioice_logger.setLevel(logging.INFO)
+
 st.set_page_config(layout='wide', page_title="Face Vision", page_icon="👦")
 con1 = st.container()
 con2 = st.container()
