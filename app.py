@@ -35,7 +35,7 @@ def web_emotion_detection(frame):
         draw.rectangle(((startX, startY), (endX, endY)), outline=(0, 255, 0), width=2)
         for i, emotion in enumerate(emotions):
             label = emotion
-            font = ImageFont.truetype("arial", 15)
+            font = ImageFont.truetype("arial.ttf", 15)
             draw.text((startX+10, startY-20), label, font=font, fill=(0, 255, 0))
     image_np = np.array(image_pil)
     return av.VideoFrame.from_ndarray(image_np, format="bgr24")
@@ -96,7 +96,7 @@ if mode == 'Capture':
                 emotions = (d["dominant_emotion"] for d in obj)
                 for i, emotion in enumerate(emotions):
                     label = emotion
-                    font = ImageFont.truetype("arial", 15)
+                    font = ImageFont.truetype("arial.tff", 15)
                     draw.text((startX+10, startY-20), label, font=font, fill=(0, 255, 0))
             image_np = np.array(image_pil)
             st.image(image_np, caption='Uploaded Image.', use_column_width=True)
