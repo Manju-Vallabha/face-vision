@@ -11,7 +11,6 @@ from PIL import Image, ImageDraw, ImageFont
 from streamlit_lottie import st_lottie
 from deepface import DeepFace
 
-
 st.set_page_config(layout='wide', page_title="Face Vision", page_icon="👦")
 con1 = st.container()
 con2 = st.container()
@@ -22,25 +21,25 @@ def load_lottiefile(filepath: str):
 
 logo = load_lottiefile("animation.json")
 
-def web_emotion_detection(frame):
-    image_np = frame.to_ndarray(format="bgr24")
-    image_pil = Image.fromarray(image_np)
-    draw = ImageDraw.Draw(image_pil)
-    faces, confidences = cv.detect_face(image_np)
-    for idx, f in enumerate(faces):
-        (startX, startY) = f[0], f[1]
-        (endX, endY) = f[2], f[3]
-        face_img = image_np[startY:endY, startX:endX]
-        obj = DeepFace.analyze(face_img, actions=['emotion'], enforce_detection=False)
-        emotions=(d["dominant_emotion"] for d in obj)
-        draw.rectangle(((startX, startY), (endX, endY)), outline=(0, 255, 0), width=2)
-        for i, emotion in enumerate(emotions):
-            label = emotion
-            font = ImageFont.truetype("arial", 15)
-            draw.text((startX+10, startY-20), label, font=font, fill=(0, 255, 0))
-    image_np = np.array(image_pil)
-    return av.VideoFrame.from_ndarray(image_np, format="bgr24")
-
+class VideoProcessor:
+    def recv(self, frame):
+        image_np = frame.to_ndarray(format="bgr24")
+        image_pil = Image.fromarray(image_np)
+        draw = ImageDraw.Draw(image_pil)
+        faces, confidences = cv.detect_face(image_np)
+        for idx, f in enumerate(faces):
+            (startX, startY) = f[0], f[1]
+            (endX, endY) = f[2], f[3]
+            face_img = image_np[startY:endY, startX:endX]
+            obj = DeepFace.analyze(face_img, actions=['emotion'], enforce_detection=False)
+            emotions=(d["dominant_emotion"] for d in obj)
+            draw.rectangle(((startX, startY), (endX, endY)), outline=(0, 255, 0), width=2)
+            for i, emotion in enumerate(emotions):
+                label = emotion
+                font = ImageFont.truetype("arial", 15)
+                draw.text((startX+10, startY-20), label, font=font, fill=(0, 255, 0))
+        image_np = np.array(image_pil)
+        return av.VideoFrame.from_ndarray(image_np, format="bgr24")
 with st.sidebar:
     st.title('Experience the power of computer vision')
     st.success('This is a computer vision application that detects emotions in real-time using the webcam')
@@ -106,6 +105,8 @@ if mode == 'Capture':
 if mode == 'Web-Cam':
     c_1, c_2, c_3 = st.columns([1,3,1])
     with c_2:
-        webrtc_streamer(key="example", video_frame_callback=web_emotion_detection,
+        webrtc_streamer(key="example", video_processor_factory=VideoProcessor,
                 rtc_configuration=RTCConfiguration(
-                    {"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]})
+                    {"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}
+                    )
+    )
