@@ -40,6 +40,7 @@ class VideoProcessor:
                 draw.text((startX+10, startY-20), label, font=font, fill=(0, 255, 0))
         image_np = np.array(image_pil)
         return av.VideoFrame.from_ndarray(image_np, format="bgr24")
+
 with st.sidebar:
     st.title('Experience the power of computer vision')
     st.success('This is a computer vision application that detects emotions in real-time using the webcam')
@@ -105,7 +106,7 @@ if mode == 'Capture':
 if mode == 'Web-Cam':
     c_1, c_2, c_3 = st.columns([1,3,1])
     with c_2:
-        webrtc_streamer(key="example", video_processor_factory=VideoProcessor,
+        webrtc_streamer(key="example",video_frame_callback=VideoProcessor, video_processor_factory=VideoProcessor,
                 rtc_configuration=RTCConfiguration(
                     {"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}
                     )
