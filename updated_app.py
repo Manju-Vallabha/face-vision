@@ -118,14 +118,8 @@ if mode == 'Capture':
             image_pil.save(save_path)
             st.success(f"Image saved to {save_path}")
 
-# Web-Cam Mode
 if mode == 'Web-Cam':
-    c_1, c_2, c_3 = st.columns([1, 3, 1])
+    c_1, c_2, c_3 = st.columns([1,3,1])
     with c_2:
-        webrtc_streamer(
-            key="example", 
-            video_frame_callback=web_emotion_detection,
-            rtc_configuration=RTCConfiguration(
-                {"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}
-            )
-        )
+        webrtc_streamer(key="example", video_frame_callback=web_emotion_detection,
+    )
